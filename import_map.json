@@ -1,7 +1,6 @@
 {
   "imports": {
     "deco-sites/prznc/": "./",
-
     "deco-sites/fashion/": "./",
     "$store/": "./",
     "deco-sites/std/": "https://denopkg.com/deco-sites/std@1.12.8/",

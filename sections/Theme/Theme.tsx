@@ -8,6 +8,9 @@ import { Color } from "https://deno.land/x/color@v0.3.0/mod.ts";
 import { useId } from "preact/hooks";
 import { Head } from "$fresh/runtime.ts";
 
+const DEFAULT_GOOGLE_FONT =
+  "@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');";
+
 export interface MainColors {
   /**
    * @format color
@@ -230,11 +233,11 @@ export interface Miscellaneous {
 
 export interface Font {
   /**
-   * @default 'Albert Sans'
+   * @default 'Montserrat'
    */
   fontFamily?: string;
   /**
-   * @default @import url('https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;700&display=swap');
+   * @default @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
    * \@format css
    */
   styleInnerHtml?: string;
@@ -328,13 +331,13 @@ const toVariables = (t: Theme): [string, string][] => {
 };
 
 const defaultTheme = {
-  "primary": "hsla(209, 28%, 21%, 1)",
+  "primary": "hsla(204, 100%, 34%, 1)",
   "primary-content": "hsla(0, 0%, 100%, 1)",
-  "secondary": "hsla(104, 18%, 46%, 1)",
-  "secondary-content": "hsla(0, 0%, 100%, 1)",
-  "tertiary": "hsla(8, 69%, 65%, 1)",
+  "secondary": "hsla(86, 77%, 60%, 1)",
+  "secondary-content": "hsla(0, 0%, 0%, 1)",
+  "tertiary": "hsla(0, 0%, 20%, 1)",
   "tertiary-content": "hsla(0, 0%, 100%, 1)",
-  "neutral": "hsla(0, 0%, 47%, 1)",
+  "neutral": "hsla(0, 0%, 20%, 1)",
   "base-100": "hsla(0, 0%, 100%, 1)",
   "success": "hsl(150 62% 95%)",
   "warning": "hsl(43 100% 95%)",
@@ -381,11 +384,7 @@ function Section({
   };
   const variables = [
     ...toVariables(theme),
-    [
-      "--font-family",
-      fonts?.fontFamily ??
-        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
-    ],
+    ["--font-family", fonts?.fontFamily ?? "Montserrat"],
   ]
     .map(([cssVar, value]) => `${cssVar}: ${value}`)
     .join(";");
@@ -397,7 +396,9 @@ function Section({
       <style
         type="text/css"
         id={`__DESIGN_SYSTEM_FONT-${id}`}
-        dangerouslySetInnerHTML={{ __html: fonts?.styleInnerHtml ?? "" }}
+        dangerouslySetInnerHTML={{
+          __html: fonts?.styleInnerHtml ?? DEFAULT_GOOGLE_FONT,
+        }}
       />
       <style
         type="text/css"
