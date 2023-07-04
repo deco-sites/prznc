@@ -1,33 +1,37 @@
-import Slider from "$store/components/ui/Slider.tsx";
-import SliderJS from "$store/islands/SliderJS.tsx";
-import { useId } from "preact/hooks";
+import LimitedDiv from "$store/components/LimitedDiv.tsx";
 
 export interface Props {
-  alerts: string[];
   /**
-   * @title Autoplay interval
-   * @description time (in seconds) to start the carousel autoplay
+   * @description the string to be shown in zipcode modal action
    */
-  interval?: number;
+  zipcodeHelper: string;
+
+  /**
+   * @description links to be shown in the alert bar
+   */
+  links: { label: string; href: string }[];
 }
 
-function Alert({ alerts = [], interval = 5 }: Props) {
-  const id = useId();
-
+function Alert({ links = [], zipcodeHelper = "Your zipcode" }: Props) {
   return (
-    <div id={id}>
-      <Slider class="carousel carousel-center w-screen bg-secondary gap-6 scrollbar-none">
-        {alerts.map((alert, index) => (
-          <Slider.Item index={index} class="carousel-item">
-            <span class="text-sm text-secondary-content flex justify-center items-center w-screen h-[38px]">
-              {alert}
-            </span>
-          </Slider.Item>
-        ))}
-      </Slider>
+    <LimitedDiv class="flex py-4 text-[13px]" baseClass="bg-neutral text-white">
+      <div class="flex flex-row gap-2 cursor-pointer">
+        <span>icon</span>
+        {zipcodeHelper}
+      </div>
 
-      <SliderJS rootId={id} interval={interval && interval * 1e3} />
-    </div>
+      <div class="w-14 mr-14 border-gray-400 border-r-[1px]" />
+
+      <ul class="flex flex-row gap-14">
+        {links.map((link) => (
+          <li>
+            <a href={link.href}>
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </LimitedDiv>
   );
 }
 
