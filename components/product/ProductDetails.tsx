@@ -1,23 +1,15 @@
-import { useId } from "preact/hooks";
+import Icon from "$store/components/ui/Icon.tsx";
+import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import AddToCartButton from "$store/islands/AddToCartButton.tsx";
-import ShippingSimulation from "$store/islands/ShippingSimulation.tsx";
+import ShippingSimulation from "$store/components/ui/ShippingSimulation.tsx";
 import Breadcrumb from "$store/components/ui/Breadcrumb.tsx";
 import Button from "$store/components/ui/Button.tsx";
-import Icon from "$store/components/ui/Icon.tsx";
 import Image from "deco-sites/std/components/Image.tsx";
-import Slider from "$store/components/ui/Slider.tsx";
-import SliderJS from "$store/components/ui/SliderJS.tsx";
 import OutOfStock from "$store/islands/OutOfStock.tsx";
 import { useOffer } from "$store/sdk/useOffer.ts";
 import { formatPrice } from "$store/sdk/format.ts";
-import { SendEventOnLoad } from "$store/sdk/analytics.tsx";
-import { mapProductToAnalyticsItem } from "deco-sites/std/commerce/utils/productToAnalyticsItem.ts";
 import type { ProductDetailsPage } from "deco-sites/std/commerce/types.ts";
 import type { LoaderReturnType } from "$live/types.ts";
-
-import ProductSelector from "./ProductVariantSelector.tsx";
-import ProductImageZoom from "$store/islands/ProductImageZoom.tsx";
-import WishlistButton from "../wishlist/WishlistButton.tsx";
 
 export type Variant = "front-back" | "slider" | "auto";
 
@@ -30,8 +22,8 @@ export interface Props {
   variant?: Variant;
 }
 
-const WIDTH = 360;
-const HEIGHT = 500;
+const WIDTH = 662;
+const HEIGHT = 450;
 const ASPECT_RATIO = `${WIDTH} / ${HEIGHT}`;
 
 /**
@@ -47,123 +39,6 @@ function NotFound() {
         </a>
       </div>
     </div>
-  );
-}
-
-function ProductInfo({ page }: { page: ProductDetailsPage }) {
-  const {
-    breadcrumbList,
-    product,
-  } = page;
-  const {
-    description,
-    productID,
-    offers,
-    name,
-    gtin,
-    isVariantOf,
-  } = product;
-  const { price, listPrice, seller, installments, availability } = useOffer(
-    offers,
-  );
-
-  return (
-    <>
-      {/* Breadcrumb */}
-      <Breadcrumb
-        itemListElement={breadcrumbList?.itemListElement.slice(0, -1)}
-      />
-      {/* Code and name */}
-      <div class="mt-4 sm:mt-8">
-        <div>
-          <span class="text-sm text-base-300">
-            Cod. {gtin}
-          </span>
-        </div>
-        <h1>
-          <span class="font-medium text-xl">{name}</span>
-        </h1>
-      </div>
-      {/* Prices */}
-      <div class="mt-4">
-        <div class="flex flex-row gap-2 items-center">
-          <span class="line-through text-base-300 text-xs">
-            {formatPrice(listPrice, offers!.priceCurrency!)}
-          </span>
-          <span class="font-medium text-xl text-secondary">
-            {formatPrice(price, offers!.priceCurrency!)}
-          </span>
-        </div>
-        <span class="text-sm text-base-300">
-          {installments}
-        </span>
-      </div>
-      {/* Sku Selector */}
-      <div class="mt-4 sm:mt-6">
-        <ProductSelector product={product} />
-      </div>
-      {/* Add to Cart and Favorites button */}
-      <div class="mt-4 sm:mt-10 flex flex-col gap-2">
-        {availability === "https://schema.org/InStock"
-          ? (
-            <>
-              {seller && (
-                <AddToCartButton
-                  skuId={productID}
-                  sellerId={seller}
-                  price={price ?? 0}
-                  discount={price && listPrice ? listPrice - price : 0}
-                  name={product.name ?? ""}
-                  productGroupId={product.isVariantOf?.productGroupID ?? ""}
-                />
-              )}
-              <WishlistButton
-                variant="full"
-                productGroupID={isVariantOf?.productGroupID}
-                productID={productID}
-              />
-            </>
-          )
-          : <OutOfStock productID={productID} />}
-      </div>
-      {/* Shipping Simulation */}
-      <div class="mt-8">
-        <ShippingSimulation
-          items={[{
-            id: Number(product.sku),
-            quantity: 1,
-            seller: seller ?? "1",
-          }]}
-        />
-      </div>
-      {/* Description card */}
-      <div class="mt-4 sm:mt-6">
-        <span class="text-sm">
-          {description && (
-            <details>
-              <summary class="cursor-pointer">Descrição</summary>
-              <div class="ml-2 mt-2">{description}</div>
-            </details>
-          )}
-        </span>
-      </div>
-      {/* Analytics Event */}
-      <SendEventOnLoad
-        event={{
-          name: "view_item",
-          params: {
-            items: [
-              mapProductToAnalyticsItem({
-                product,
-                breadcrumbList,
-                price,
-                listPrice,
-              }),
-            ],
-          },
-        }}
-      />
-    </>
   );
 }
 
@@ -229,102 +104,11 @@ const useStableImages = (product: ProductDetailsPage["product"]) => {
   });
 };
 
-function Details({
-  page,
-  variant,
-}: { page: ProductDetailsPage; variant: Variant }) {
+function Details({ page }: { page: ProductDetailsPage; variant: Variant }) {
   const { product } = page;
-  const id = `product-image-gallery:${useId()}`;
-  const images = useStableImages(product);
-
-  /**
-   * Product slider variant
-   *
-   * Creates a three columned grid on destkop, one for the dots preview, one for the image slider and the other for product info
-   * On mobile, there's one single column with 3 rows. Note that the orders are different from desktop to mobile, that's why
-   * we rearrange each cell with col-start- directives
-   */
-  if (variant === "slider") {
-    return (
-      <>
-        <div
-          id={id}
-          class="grid grid-cols-1 gap-4 sm:grid-cols-[max-content_40vw_40vw] sm:grid-rows-1 sm:justify-center"
-        >
-          {/* Image Slider */}
-          <div class="relative sm:col-start-2 sm:col-span-1 sm:row-start-1">
-            <Slider class="carousel carousel-center gap-6 w-screen sm:w-[40vw]">
-              {images.map((img, index) => (
-                <Slider.Item
-                  index={index}
-                  class="carousel-item w-full"
-                >
-                  <Image
-                    class="w-full"
-                    sizes="(max-width: 640px) 100vw, 40vw"
-                    style={{ aspectRatio: ASPECT_RATIO }}
-                    src={img.url!}
-                    alt={img.alternateName}
-                    width={WIDTH}
-                    height={HEIGHT}
-                    // Preload LCP image for better web vitals
-                    preload={index === 0}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                </Slider.Item>
-              ))}
-            </Slider>
-
-            <Slider.PrevButton
-              class="no-animation absolute left-2 top-1/2 btn btn-circle btn-outline"
-              disabled
-            >
-              <Icon size={20} id="ChevronLeft" strokeWidth={3} />
-            </Slider.PrevButton>
-
-            <Slider.NextButton
-              class="no-animation absolute right-2 top-1/2 btn btn-circle btn-outline"
-              disabled={images.length < 2}
-            >
-              <Icon size={20} id="ChevronRight" strokeWidth={3} />
-            </Slider.NextButton>
-
-            <div class="absolute top-2 right-2 bg-base-100 rounded-full">
-              <ProductImageZoom
-                images={images}
-                width={1280}
-                height={1280 * HEIGHT / WIDTH}
-              />
-            </div>
-          </div>
-
-          {/* Dots */}
-          <ul class="flex gap-2 sm:justify-start overflow-auto px-4 sm:px-0 sm:flex-col sm:col-start-1 sm:col-span-1 sm:row-start-1">
-            {images.map((img, index) => (
-              <li class="min-w-[63px] sm:min-w-[100px]">
-                <Slider.Dot index={index}>
-                  <Image
-                    style={{ aspectRatio: ASPECT_RATIO }}
-                    class="group-disabled:border-base-300 border rounded "
-                    width={63}
-                    height={87.5}
-                    src={img.url!}
-                    alt={img.alternateName}
-                  />
-                </Slider.Dot>
-              </li>
-            ))}
-          </ul>
-
-          {/* Product Info */}
-          <div class="px-4 sm:pr-0 sm:pl-6 sm:col-start-3 sm:col-span-1 sm:row-start-1">
-            <ProductInfo page={page} />
-          </div>
-        </div>
-        <SliderJS rootId={id}></SliderJS>
-      </>
-    );
-  }
+  const [img] = useStableImages(product);
+  const { productID, offers, name, gtin } = product;
+  const { price, listPrice, seller, availability } = useOffer(offers);
 
   /**
    * Product front-back variant.
@@ -333,31 +117,79 @@ function Details({
    * reached causing a scrollbar to be rendered.
    */
   return (
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-[50vw_25vw] sm:grid-rows-1 sm:justify-center">
-      {/* Image slider */}
-      <ul class="carousel carousel-center gap-6">
-        {[images[0], images[1] ?? images[0]].map((img, index) => (
-          <li class="carousel-item min-w-[100vw] sm:min-w-[24vw]">
-            <Image
-              sizes="(max-width: 640px) 100vw, 24vw"
-              style={{ aspectRatio: ASPECT_RATIO }}
-              src={img.url!}
-              alt={img.alternateName}
-              width={WIDTH}
-              height={HEIGHT}
-              // Preload LCP image for better web vitals
-              preload={index === 0}
-              loading={index === 0 ? "eager" : "lazy"}
-            />
-          </li>
-        ))}
-      </ul>
+    <LimitedDiv class="flex flex-col gap-4">
+      {/* Breadcrumb */}
+      <Breadcrumb
+        itemListElement={page?.breadcrumbList?.itemListElement.slice(0, -1)}
+      />
 
-      {/* Product Info */}
-      <div class="px-4 sm:pr-0 sm:pl-6">
-        <ProductInfo page={page} />
+      <div class="flex flex-col lg:flex-row gap-8">
+        <Image
+          sizes="(max-width: 640px) 100vw, 24vw"
+          style={{ aspectRatio: ASPECT_RATIO }}
+          src={img.url!}
+          alt={img.alternateName}
+          width={WIDTH}
+          height={HEIGHT}
+          class="object-contain bg-white rounded-sm"
+          // Preload LCP image for better web vitals
+          preload={true}
+          loading={"lazy"}
+        />
+
+        {/* Product Info */}
+        <div class="px-4 sm:pr-0 sm:pl-6 flex flex-1 flex-col">
+          {/* Code and name */}
+          <div>
+            <span class="text-xs font-bold">{gtin}</span>
+            <h1 class="font-medium text-2xl">{name}</h1>
+          </div>
+
+          <div class="my-6 flex gap-2 text-sm text-primary cursor-pointer items-center">
+            <Icon id="Discount" size={24} class="text-gray-800" />
+            Condições de pagamento
+          </div>
+
+          {/* Prices */}
+          <div>
+            <div class="flex flex-col gap-2">
+              <span class="line-through text-base-300 text-sm">
+                {formatPrice(listPrice, offers!.priceCurrency!)}
+              </span>
+              <span class="font-bold text-2xl">
+                {formatPrice(price, offers!.priceCurrency!)}
+              </span>
+            </div>
+          </div>
+
+          {/* Add to Cart and Favorites button */}
+          <div class="mt-4 sm:mt-10 flex flex-col gap-2">
+            {availability === "https://schema.org/InStock" && seller
+              ? (
+                <AddToCartButton
+                  skuId={productID}
+                  sellerId={seller}
+                  price={price ?? 0}
+                  discount={price && listPrice ? listPrice - price : 0}
+                  name={product.name ?? ""}
+                  productGroupId={product.isVariantOf?.productGroupID ?? ""}
+                />
+              )
+              : <OutOfStock productID={productID} />}
+          </div>
+
+          {/* Shipping Simulation */}
+          <div class="mt-8 flex justify-between border-y-2 border-gray-200 py-8">
+            <div class="flex gap-2 text-sm justify-center items-center mr-auto">
+              <Icon id="Truck" size={32} class="text-primary" />
+              Valor e prazo de entrega
+            </div>
+
+            <ShippingSimulation />
+          </div>
+        </div>
       </div>
-    </div>
+    </LimitedDiv>
   );
 }
 

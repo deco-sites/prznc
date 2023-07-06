@@ -20,8 +20,8 @@ function Breadcrumb({ itemListElement = [], searchTerm }: Props) {
       <ul>
         {filteredItems.map(({ name, item }, index) => (
           <li
-            class={`text-xs font-bold ${
-              index === lastIndex ? "text-primary" : "text-base"
+            class={`text-xs ${
+              index === lastIndex ? "text-primary font-semibold" : "text-base"
             }`}
           >
             <a href={item} class="py-1 px-3 rounded-full bg-gray-200">
