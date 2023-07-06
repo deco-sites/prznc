@@ -1,5 +1,6 @@
-import Icon, { AvailableIcons } from "$store/components/ui/Icon.tsx";
+import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import Header from "$store/components/ui/SectionHeader.tsx";
+import Icon, { AvailableIcons } from "$store/components/ui/Icon.tsx";
 
 export interface Props {
   title?: string;
@@ -38,7 +39,6 @@ export default function Benefits(
   } = props;
 
   const listOfBenefits = benefits.map((benefit, index) => {
-    const showDivider = index < benefits.length - 1;
     const reverse = layout?.variation === "Color reverse";
     const benefitLayout = !layout?.variation || layout?.variation === "Simple"
       ? "tiled"
@@ -50,12 +50,6 @@ export default function Benefits(
           reverse ? "bg-primary text-primary-content p-4 lg:px-8 lg:py-4" : ""
         } flex gap-4 ${
           benefitLayout == "piledup" ? "flex-col items-center text-center" : ""
-        } ${
-          showDivider && benefitLayout !== "piledup"
-            ? "border-b border-neutral-300"
-            : ""
-        } ${showDivider ? "pb-4 lg:pr-8 lg:border-r lg:border-b-0" : ""} ${
-          showDivider && !reverse ? "lg:pb-0" : ""
         }`}
       >
         <div class="flex-none">
@@ -77,7 +71,7 @@ export default function Benefits(
             {benefit.label}
           </div>
           <p
-            class={`text-sm leading-5 ${
+            class={`text-sm font-semibold leading-5 ${
               reverse ? "text-base-100" : "text-neutral"
             } ${benefitLayout == "piledup" ? "hidden lg:block" : ""}`}
           >
@@ -89,7 +83,7 @@ export default function Benefits(
   });
 
   return (
-    <>
+    <LimitedDiv baseClass="my-4" class="px-4 rounded-lg shadow-lg">
       {!layout?.variation || layout?.variation === "Simple"
         ? (
           <div class="w-full container px-4 py-8 flex flex-col gap-8 lg:gap-10 lg:py-10 lg:px-0">
@@ -134,6 +128,6 @@ export default function Benefits(
           </div>
         </div>
       )}
-    </>
+    </LimitedDiv>
   );
 }

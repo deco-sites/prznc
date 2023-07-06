@@ -1,6 +1,7 @@
 import ProductCard, {
   Layout as cardLayout,
 } from "$store/components/product/ProductCard.tsx";
+import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import SliderJS from "$store/islands/SliderJS.tsx";
 import Icon from "$store/components/ui/Icon.tsx";
 import Slider from "$store/components/ui/Slider.tsx";
@@ -37,7 +38,7 @@ function ProductShelf({
   }
 
   return (
-    <div class="w-full container  py-8 flex flex-col gap-12 lg:gap-16 lg:py-10">
+    <LimitedDiv class="w-full container py-8 flex flex-col gap-12 lg:gap-16 lg:py-10">
       <Header
         title={title || ""}
         description={description || ""}
@@ -47,13 +48,15 @@ function ProductShelf({
 
       <div
         id={id}
-        class="container grid grid-cols-[48px_1fr_48px] px-0 sm:px-5"
+        class="grid grid-cols-[60px_1fr_60px] md:px-4 lg:px-0"
       >
-        <Slider class="carousel carousel-center sm:carousel-end gap-6 col-span-full row-start-2 row-end-5">
+        <Slider class="carousel carousel-center col-span-full sm:carousel-end gap-6 row-start-2 row-end-5">
           {products?.map((product, index) => (
             <Slider.Item
               index={index}
-              class="carousel-item w-[270px] sm:w-[292px] first:pl-6 sm:first:pl-0 last:pr-6 sm:last:pr-0"
+              class={`${
+                index === products.length ? "mr-[60px]" : ""
+              } carousel-item w-[230px] sm:w-[230px] first:pl-6 last:pr-6 md:first:pl-16 md:last:pr-16 pb-6`}
             >
               <ProductCard
                 product={product}
@@ -66,17 +69,19 @@ function ProductShelf({
 
         <>
           <div class="hidden relative sm:block z-10 col-start-1 row-start-3">
-            <Slider.PrevButton class="btn btn-circle btn-outline absolute right-1/2 bg-base-100">
-              <Icon size={20} id="ChevronLeft" strokeWidth={3} />
+            <Slider.PrevButton class="btn btn-md btn-circle btn-outline absolute bg-base-100">
+              <Icon size={24} id="ChevronLeft" strokeWidth={3} />
             </Slider.PrevButton>
           </div>
           <div class="hidden relative sm:block z-10 col-start-3 row-start-3">
-            <Slider.NextButton class="btn btn-circle btn-outline absolute left-1/2 bg-base-100">
-              <Icon size={20} id="ChevronRight" strokeWidth={3} />
+            <Slider.NextButton class="btn btn-md btn-circle btn-outline absolute right-0 bg-base-100">
+              <Icon size={24} id="ChevronRight" strokeWidth={3} />
             </Slider.NextButton>
           </div>
         </>
+
         <SliderJS rootId={id} />
+
         <SendEventOnLoad
           event={{
             name: "view_item_list",
@@ -92,7 +97,7 @@ function ProductShelf({
           }}
         />
       </div>
-    </div>
+    </LimitedDiv>
   );
 }
 

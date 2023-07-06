@@ -12,20 +12,20 @@ function Header(props: Props) {
       {props.title || props.description
         ? (
           <div
-            class={`flex flex-col gap-2 ${
-              props.alignment === "left" ? "text-left" : "text-center"
+            class={`flex flex-col gap-2 text-center ${
+              props.alignment === "left" ? "lg:text-left" : ""
             }`}
           >
             {props.title &&
               (
                 <h1
-                  class={`text-2xl leading-8 lg:leading-10
+                  class={`text-2xl leading-8 lg:leading-10 font-bold
                   ${
                     props.colorReverse
                       ? "text-primary-content"
                       : "text-base-content"
                   }
-                  ${props.fontSize === "Normal" ? "lg:text-3xl" : "lg:text-4xl"}
+                  ${props.fontSize === "Normal" ? "lg:text-2xl" : "lg:text-2xl"}
                 `}
                 >
                   {props.title}

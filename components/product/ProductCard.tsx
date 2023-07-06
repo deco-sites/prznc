@@ -51,8 +51,8 @@ const relative = (url: string) => {
   return `${link.pathname}${link.search}`;
 };
 
-const WIDTH = 200;
-const HEIGHT = 279;
+const WIDTH = 118;
+const HEIGHT = 118;
 
 function ProductCard({ product, preload, itemListName, layout }: Props) {
   const {
@@ -63,18 +63,21 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
     offers,
     isVariantOf,
   } = product;
+
   const id = `product-card-${productID}`;
-  const productGroupID = isVariantOf?.productGroupID;
   const [front, back] = images ?? [];
   const { listPrice, price, installments } = useOffer(offers);
   const possibilities = useVariantPossibilities(product);
   const variants = Object.entries(Object.values(possibilities)[0] ?? {});
+  const _discountPercentage = (price || 0) * 100 / (listPrice || 0) - 100;
+  const discountPercentage = Math.abs(Math.round(_discountPercentage));
 
   const l = layout;
   const align =
     !l?.basics?.contentAlignment || l?.basics?.contentAlignment == "Left"
       ? "left"
       : "center";
+
   const skuSelector = variants.map(([value, [link]]) => (
     <li>
       <a href={link}>
@@ -85,28 +88,22 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
       </a>
     </li>
   ));
+
   const cta = (
     <a
-      href={url && relative(url)}
       aria-label="view product"
-      class="btn btn-block"
+      href={url && relative(url)}
+      class="cursor-pointer bg-primary text-white text-sm font-bold flex w-full h-[32px] justify-center items-center hover:bg-[#6eae46] hover:text-white transition-all rounded-md"
     >
-      {l?.basics?.ctaText || "Ver produto"}
+      {l?.basics?.ctaText || "Comprar"}
     </a>
   );
 
   return (
     <div
       id={id}
-      class={`card card-compact group w-full ${
-        align === "center" ? "text-center" : "text-start"
-      } ${l?.onMouseOver?.showCardShadow ? "lg:hover:card-bordered" : ""}
-        ${
-        l?.onMouseOver?.card === "Move up" &&
-        "duration-500 transition-translate ease-in-out lg:hover:-translate-y-2"
-      }
-      `}
       data-deco="view-product"
+      class="card card-compact group w-full bg-white rounded-2xl pb-3 shadow-lg"
     >
       <SendEventOnClick
         id={id}
@@ -124,30 +121,13 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
           },
         }}
       />
-      <figure
-        class="relative overflow-hidden"
-        style={{ aspectRatio: `${WIDTH} / ${HEIGHT}` }}
-      >
-        {/* Wishlist button */}
-        <div
-          class={`absolute top-2 z-10
-          ${
-            l?.elementsPositions?.favoriteIcon === "Top left"
-              ? "left-2"
-              : "right-2"
-          }
-          ${
-            l?.onMouseOver?.showFavoriteIcon
-              ? "lg:hidden lg:group-hover:block"
-              : "lg:hidden"
-          }
-        `}
-        >
-          <WishlistIcon
-            productGroupID={productGroupID}
-            productID={productID}
-          />
-        </div>
+      <figure class="relative overflow-hidden w-full min-h-[118px] flex justify-center items-center py-4">
+        {discountPercentage != 0 && (
+          <span class="absolute top-0 left-0 mt-4 ml-4 text-xs rounded-full border-solid border-[1px] p-1 px-2 border-red-500 bg-white text-red-500 font-bold">
+            {discountPercentage}% off
+          </span>
+        )}
+
         {/* Product Images */}
         <a
           href={url && relative(url)}
@@ -159,60 +139,15 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
             alt={front.alternateName}
             width={WIDTH}
             height={HEIGHT}
-            class={`
-              absolute rounded w-full
-              ${
-              (!l?.onMouseOver?.image ||
-                  l?.onMouseOver?.image == "Change image")
-                ? "duration-100 transition-opacity opacity-100 lg:group-hover:opacity-0"
-                : ""
-            }
-              ${
-              l?.onMouseOver?.image == "Zoom image"
-                ? "duration-100 transition-scale scale-100 lg:group-hover:scale-125"
-                : ""
-            }
-            `}
             sizes="(max-width: 640px) 50vw, 20vw"
             preload={preload}
             loading={preload ? "eager" : "lazy"}
             decoding="async"
           />
-          {(!l?.onMouseOver?.image ||
-            l?.onMouseOver?.image == "Change image") && (
-            <Image
-              src={back?.url ?? front.url!}
-              alt={back?.alternateName ?? front.alternateName}
-              width={WIDTH}
-              height={HEIGHT}
-              class="absolute transition-opacity rounded w-full opacity-0 lg:group-hover:opacity-100"
-              sizes="(max-width: 640px) 50vw, 20vw"
-              loading="lazy"
-              decoding="async"
-            />
-          )}
         </a>
-        <figcaption
-          class={`
-          absolute bottom-1 left-0 w-full flex flex-col gap-3 p-2
-          ${
-            l?.onMouseOver?.showSkuSelector || l?.onMouseOver?.showCta
-              ? "transition-opacity opacity-0 lg:group-hover:opacity-100"
-              : "lg:hidden"
-          }
-        `}
-        >
-          {/* SKU Selector */}
-          {l?.onMouseOver?.showSkuSelector && (
-            <ul class="flex justify-center items-center gap-2 w-full">
-              {skuSelector}
-            </ul>
-          )}
-          {l?.onMouseOver?.showCta && cta}
-        </figcaption>
       </figure>
       {/* Prices & Name */}
-      <div class="flex-auto flex flex-col p-2 gap-3 lg:gap-4">
+      <div class="flex-auto flex flex-col p-2">
         {/* SKU Selector */}
         {(!l?.elementsPositions?.skuSelector ||
           l?.elementsPositions?.skuSelector === "Top") && (
@@ -232,20 +167,13 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
         {l?.hide?.productName && l?.hide?.productDescription
           ? ""
           : (
-            <div class="flex flex-col gap-0">
+            <div class="flex flex-col h-[104px] gap-0">
               {l?.hide?.productName
                 ? ""
                 : (
-                  <h2 class="truncate text-base lg:text-lg text-base-content">
+                  <h2 class="text-sm text-base-content">
                     {name}
                   </h2>
-                )}
-              {l?.hide?.productDescription
-                ? ""
-                : (
-                  <p class="truncate text-sm lg:text-sm text-neutral">
-                    {product.description}
-                  </p>
                 )}
             </div>
           )}
@@ -259,14 +187,16 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
               } ${align === "center" ? "justify-center" : "justify-start"}`}
             >
               <div
-                class={`line-through text-base-300 text-xs ${
+                class={`line-through text-xs ${
                   l?.basics?.oldPriceSize === "Normal" ? "lg:text-xl" : ""
                 }`}
               >
-                {formatPrice(listPrice, offers!.priceCurrency!)}
+                {listPrice !== price
+                  ? formatPrice(listPrice, offers!.priceCurrency!)
+                  : "."}
               </div>
-              <div class="text-accent text-base lg:text-xl">
-                {formatPrice(price, offers!.priceCurrency!)}
+              <div class="text-primary text-lg font-bold">
+                {formatPrice(price, offers!.priceCurrency!)} un
               </div>
             </div>
             {l?.hide?.installments
@@ -297,7 +227,7 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
         {!l?.hide?.cta
           ? (
             <div
-              class={`flex-auto flex items-end ${
+              class={`mt-2 flex-auto flex items-end ${
                 l?.onMouseOver?.showCta ? "lg:hidden" : ""
               }`}
             >
