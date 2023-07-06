@@ -32,7 +32,7 @@ function MenuButton() {
         displayMenu.value = true;
       }}
     >
-      <Icon id="Bars3" width={20} height={20} strokeWidth={0.01} />
+      <Icon id="Bars3" size={20} strokeWidth={0.01} />
     </Button>
   );
 }
@@ -64,22 +64,14 @@ function CartButton() {
 
   return (
     <Button
-      class="btn btn-circle btn-sm btn-ghost relative"
-      aria-label="open cart"
-      data-deco={displayCart.value && "open-cart"}
-      loading={loading.value}
       onClick={onClick}
+      aria-label="open cart"
+      loading={loading.value}
+      class="btn btn-sm btn-ghost relative"
+      data-deco={displayCart.value && "open-cart"}
     >
-      <div class="indicator">
-        {totalItems && (
-          <span class="indicator-item badge badge-secondary badge-sm">
-            {totalItems > 9 ? "9+" : totalItems}
-          </span>
-        )}
-        {!loading.value && (
-          <Icon id="ShoppingCart" width={20} height={20} strokeWidth={2} />
-        )}
-      </div>
+      {!loading.value && <Icon id="ShoppingCart" width={24} height={24} />}
+      <span class="hidden lg:block">R$ {total?.value ?? "0,00"}</span>
     </Button>
   );
 }

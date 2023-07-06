@@ -1,3 +1,4 @@
+import { asset } from "$fresh/runtime.ts";
 import LimitedDiv from "$store/components/LimitedDiv.tsx";
 
 export interface Props {
@@ -14,15 +15,18 @@ export interface Props {
 
 function Alert({ links = [], zipcodeHelper = "Your zipcode" }: Props) {
   return (
-    <LimitedDiv class="flex py-4 text-[13px]" baseClass="bg-neutral text-white">
-      <div class="flex flex-row gap-2 cursor-pointer">
-        <span>icon</span>
+    <LimitedDiv
+      baseClass="bg-neutral text-white"
+      class="flex py-2 px-2 lg:py-3 lg:px-0 text-[13px]"
+    >
+      <div class="flex flex-row gap-2 cursor-pointer font-bold lg:font-normal w-full lg:w-auto">
+        <img src={asset("/pin-map.png")} alt="map" />
         {zipcodeHelper}
       </div>
 
-      <div class="w-14 mr-14 border-gray-400 border-r-[1px]" />
+      <div class="hidden lg:block w-14 mr-14 border-gray-400 border-r-[1px]" />
 
-      <ul class="flex flex-row gap-14">
+      <ul class="hidden lg:flex flex-row gap-14">
         {links.map((link) => (
           <li>
             <a href={link.href}>

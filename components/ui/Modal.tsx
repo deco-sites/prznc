@@ -1,6 +1,5 @@
 import Button from "$store/components/ui/Button.tsx";
 import { useEffect, useRef } from "preact/hooks";
-import { useCart } from "deco-sites/std/packs/vtex/hooks/useCart.ts";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { useSignal } from "@preact/signals";
 import type { JSX } from "preact";
@@ -16,6 +15,7 @@ if (IS_BROWSER && typeof window.HTMLDialogElement === "undefined") {
 
 export type Props = JSX.IntrinsicElements["dialog"] & {
   title?: string;
+  style?: "primary" | "secondary" | "neutral";
   mode?: "sidebar-right" | "sidebar-left" | "center";
   onClose?: () => Promise<void> | void;
   loading?: "lazy" | "eager";
@@ -39,10 +39,17 @@ const containerStyles = {
   center: "",
 };
 
+const styleStyles: Record<string, string> = {
+  "primary": "bg-primary text-white",
+  "secondary": "bg-secondary text-primary",
+  "neutral": "bg-secondary text-primary",
+};
+
 const Modal = ({
   open,
   title,
   mode = "sidebar-right",
+  style = "neutral",
   onClose,
   children,
   loading,
@@ -85,16 +92,22 @@ const Modal = ({
             containerStyles[mode]
           }`}
         >
-          <header class="flex px-4 py-6 justify-between items-center border-b border-base-200">
+          <header
+            class={`flex px-4 py-1 justify-between items-center border-b border-base-200 ${
+              styleStyles[style]
+            }`}
+          >
             <div class="flex gap-5 items-center">
-              <h1>
-                <span class="font-medium text-2xl">{title}</span>
+              <h1 class="font-bold text-lg">
+                {title}
               </h1>
             </div>
-            <Button class="btn btn-ghost" onClick={onClose}>
+
+            <Button class="btn btn-ghost -mr-4" onClick={onClose}>
               <Icon id="XMark" width={20} height={20} strokeWidth={2} />
             </Button>
           </header>
+
           <div class="overflow-y-auto flex-grow flex flex-col">
             {loading === "lazy" ? lazy.value && children : children}
           </div>

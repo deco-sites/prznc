@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.btn-ghost {
+  @apply normal-case;
+  @apply font-normal;
+  @apply hover:bg-transparent;
+}
+
 @layer base {
 
   /* Allow changing font family via CMS */
@@ -19,6 +25,11 @@
   input[type=number] {
     -moz-appearance: textfield;
     appearance: textfield;
+  }
+
+  body {
+    background-color: #f4f4f4;
+    min-height: 100vh;
   }
 }
 

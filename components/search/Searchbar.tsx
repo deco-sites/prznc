@@ -9,28 +9,12 @@
  * no JavaScript is shipped to the browser!
  */
 
-import { useEffect, useRef } from "preact/compat";
 import Icon from "$store/components/ui/Icon.tsx";
 import Button from "$store/components/ui/Button.tsx";
-import Spinner from "$store/components/ui/Spinner.tsx";
-import ProductCard from "$store/components/product/ProductCard.tsx";
-import Slider from "$store/components/ui/Slider.tsx";
-import { useAutocomplete } from "deco-sites/std/packs/vtex/hooks/useAutocomplete.ts";
-import { useUI } from "$store/sdk/useUI.ts";
 import { sendEvent } from "$store/sdk/analytics.tsx";
-
-function CloseButton() {
-  const { displaySearchbar } = useUI();
-
-  return (
-    <Button
-      class="btn-ghost btn-circle"
-      onClick={() => (displaySearchbar.value = false)}
-    >
-      <Icon id="XMark" width={20} height={20} strokeWidth={2} />
-    </Button>
-  );
-}
+import Spinner from "$store/components/ui/Spinner.tsx";
+import { useEffect, useRef, useState } from "preact/compat";
+import { useAutocomplete } from "deco-sites/std/packs/vtex/hooks/useAutocomplete.ts";
 
 // Editable props
 export interface EditableProps {
@@ -58,167 +42,86 @@ export interface EditableProps {
   query?: string;
 }
 
-export type Props = EditableProps & {
-  variant?: "desktop" | "mobile";
-};
+export type Props = EditableProps;
 
 function Searchbar({
   placeholder = "What are you looking for?",
   action = "/s",
   name = "q",
   query,
-  variant = "mobile",
 }: Props) {
+  const [isFocused, setIsFocused] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { setSearch, suggestions, loading } = useAutocomplete();
-  const hasProducts = Boolean(suggestions.value?.products?.length);
   const hasTerms = Boolean(suggestions.value?.searches?.length);
-  const notFound = !hasProducts && !hasTerms;
 
   useEffect(() => {
-    if (!searchInputRef.current) {
-      return;
-    }
-
-    searchInputRef.current.focus();
+    setSearch("");
   }, []);
 
   return (
-    <div class="flex flex-col p-4 md:py-6 md:px-20">
-      <div class="flex items-center gap-4">
+    <div class="flex flex-col w-full relative">
+      <div class="flex items-center gap-4 h-[50px] lg:h-[40px] bg-white rounded-md min-w-[320px] w-full">
         <form
           id="searchbar"
           action={action}
-          class="flex-grow flex gap-3 px-3 py-2 border border-base-200"
+          class="flex-grow flex gap-2 px-2 lg:px-4"
         >
+          <input
+            name={name}
+            role="combobox"
+            id="search-input"
+            autocomplete="off"
+            ref={searchInputRef}
+            defaultValue={query}
+            placeholder={placeholder}
+            aria-controls="search-suggestion"
+            onFocus={() => setIsFocused(true)}
+            onInput={(e) => setSearch(e.currentTarget.value)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            class="flex-grow outline-none placeholder-shown:sibling:hidden text-sm bg-transparent"
+          />
           <Button
-            class="btn-ghost"
-            aria-label="Search"
-            htmlFor="searchbar"
+            type="submit"
             tabIndex={-1}
+            htmlFor="searchbar"
+            aria-label="Search"
+            class="btn btn-sm btn-ghost pr-0"
           >
             <Icon
-              class="text-base-300"
-              id="MagnifyingGlass"
               size={20}
+              id="MagnifyingGlass"
               strokeWidth={0.01}
+              class="text-primary"
             />
           </Button>
-          <input
-            ref={searchInputRef}
-            id="search-input"
-            class="flex-grow outline-none placeholder-shown:sibling:hidden"
-            name={name}
-            defaultValue={query}
-            onInput={(e) => {
-              const value = e.currentTarget.value;
-
-              if (value) {
-                sendEvent({
-                  name: "search",
-                  params: { search_term: value },
-                });
-              }
-
-              setSearch(value);
-            }}
-            placeholder={placeholder}
-            role="combobox"
-            aria-controls="search-suggestion"
-            autocomplete="off"
-          />
-          <button
-            type="button"
-            aria-label="Clean search"
-            class="focus:outline-none"
-            tabIndex={-1}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (searchInputRef.current === null) return;
-
-              searchInputRef.current.value = "";
-              setSearch("");
-            }}
-          >
-            <span class="text-sm">limpar</span>
-          </button>
         </form>
-        {variant === "desktop" && <CloseButton />}
       </div>
-      <div class="flex flex-col gap-6 divide-y divide-base-200 mt-6 empty:mt-0 md:flex-row md:divide-y-0">
-        {notFound
-          ? (
-            <div class="py-16 md:py-6! flex flex-col gap-4 w-full">
-              <span
-                class="font-medium text-xl text-center"
-                role="heading"
-                aria-level={3}
-              >
-                Nenhum resultado encontrado
-              </span>
-              <span class="text-center text-base-300">
-                Vamos tentar de outro jeito? Verifique a ortografia ou use um
-                termo diferente
-              </span>
-            </div>
-          )
-          : (
-            <>
-              <div class="flex flex-col gap-6 md:w-[15.25rem] md:max-w-[15.25rem]\">
-                <div class="flex gap-2 items-center">
-                  <span
-                    class="font-medium text-xl"
-                    role="heading"
-                    aria-level={3}
-                  >
-                    Sugestões
-                  </span>
-                  {loading.value && <Spinner />}
-                </div>
-                <ul id="search-suggestion" class="flex flex-col gap-6">
-                  {suggestions.value!.searches?.map(({ term }) => (
-                    <li>
-                      <a href={`/s?q=${term}`} class="flex gap-4 items-center">
-                        <span>
-                          <Icon
-                            id="MagnifyingGlass"
-                            size={20}
-                            strokeWidth={0.01}
-                          />
-                        </span>
-                        <span>
-                          {term}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div class="flex flex-col pt-6 md:pt-0 gap-6 overflow-x-hidden">
-                <div class="flex gap-2 items-center">
-                  <span
-                    class="font-medium text-xl"
-                    role="heading"
-                    aria-level={3}
-                  >
-                    Produtos sugeridos
-                  </span>
-                  {loading.value && <Spinner />}
-                </div>
-                <Slider class="carousel">
-                  {suggestions.value!.products?.map((product, index) => (
-                    <Slider.Item
-                      index={index}
-                      class="carousel-item first:ml-4 last:mr-4 min-w-[200px] max-w-[200px]"
-                    >
-                      <ProductCard product={product} />
-                    </Slider.Item>
-                  ))}
-                </Slider>
-              </div>
-            </>
-          )}
-      </div>
+
+      {hasTerms && isFocused && (
+        <div class="bg-white w-full absolute top-full -mt-1 flex flex-col">
+          <div class="flex gap-2 items-center p-4 pb-0">
+            <span class="font-bold text-sm" role="heading">
+              Termos mais buscados
+            </span>
+            {loading.value && <Spinner />}
+          </div>
+
+          <ul class="flex flex-col mt-2">
+            {suggestions.value!.searches?.map(({ term }, index) => (
+              <li class="text-xs">
+                <a
+                  href={`/s?q=${term}`}
+                  target="_blank"
+                  class="flex px-4 py-2 items-center hover:bg-gray-100"
+                >
+                  <span class="w-6">{index + 1}º</span> {term}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

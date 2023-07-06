@@ -1,81 +1,34 @@
 import Icon from "$store/components/ui/Icon.tsx";
-import type { INavItem } from "./NavItem.tsx";
+import type { NavItem, NavLink } from "./Header.tsx";
 
 export interface Props {
-  items: INavItem[];
+  items: NavItem[];
 }
 
-function MenuItem({ item }: { item: INavItem }) {
+function MenuItem({ item }: { item: NavLink }) {
   return (
-    <div class="collapse collapse-plus">
-      <input type="checkbox" />
-      <div class="collapse-title">{item.label}</div>
-      <div class="collapse-content">
-        <ul>
-          <li>
-            <a class="underline text-sm" href={item.href}>Ver todos</a>
-          </li>
-          {item.children?.map((node) => (
-            <li>
-              <MenuItem item={node} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <a href={item.href} class="flex px-4 py-2">
+      {item.label}
+      <Icon id="ChevronRight" size={20} class="ml-auto" />
+    </a>
   );
 }
 
 function Menu({ items }: Props) {
   return (
-    <>
-      <ul class="px-4 flex-grow flex flex-col divide-y divide-base-200">
+    <div>
+      <span class="block px-4 pt-4 text-primary font-bold text-sm">
+        Categorias
+      </span>
+
+      <ul class="flex-grow flex flex-col mt-4">
         {items.map((item) => (
-          <li>
+          <li class="text-sm font-bold text-[#525252]">
             <MenuItem item={item} />
           </li>
         ))}
       </ul>
-
-      <ul class="flex flex-col py-2 bg-base-200">
-        <li>
-          <a
-            class="flex items-center gap-4 px-4 py-2"
-            href="/wishlist"
-          >
-            <Icon id="Heart" width={20} height={20} strokeWidth={2} />
-            <span class="text-sm">Lista de desejos</span>
-          </a>
-        </li>
-        <li>
-          <a
-            class="flex items-center gap-4 px-4 py-2"
-            href="https://www.deco.cx"
-          >
-            <Icon id="MapPin" width={20} height={20} strokeWidth={2} />
-            <span class="text-sm">Nossas lojas</span>
-          </a>
-        </li>
-        <li>
-          <a
-            class="flex items-center gap-4 px-4 py-2"
-            href="https://www.deco.cx"
-          >
-            <Icon id="Phone" width={20} height={20} strokeWidth={2} />
-            <span class="text-sm">Fale conosco</span>
-          </a>
-        </li>
-        <li>
-          <a
-            class="flex items-center gap-4 px-4 py-2"
-            href="https://www.deco.cx"
-          >
-            <Icon id="User" width={20} height={20} strokeWidth={2} />
-            <span class="text-sm">Minha conta</span>
-          </a>
-        </li>
-      </ul>
-    </>
+    </div>
   );
 }
 
