@@ -11,17 +11,19 @@ export default function Logo({ logo }: Props) {
   return (
     <>
       {logo?.image && (
-        <div class="flex flex-col gap-3">
-          <div class="w-28 max-h-16">
+        <div class="flex flex-row gap-6 max-w-[380px]">
+          <div class="block w-[62px] h-[62px]">
             <img
+              width={62}
+              height={62}
               src={logo?.image}
               alt={logo?.description}
-              width={200}
-              height={200}
+              class="block w-[62px] h-[62px]"
             />
           </div>
-          <div class="">
+          <div class="flex flex-1 flex-col gap-3 text-sm text-[#525252]">
             {logo?.description}
+            <a href="#" class="underline">Clique e saiba mais</a>
           </div>
         </div>
       )}
