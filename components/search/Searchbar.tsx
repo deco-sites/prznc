@@ -63,19 +63,15 @@ function Searchbar({
     <div class="flex flex-col w-full relative">
       <div class="flex items-center gap-4 h-[50px] lg:h-[40px] bg-white rounded-md min-w-[320px] w-full">
         <form
-          id="searchbar"
           action={action}
           class="flex-grow flex gap-2 px-2 lg:px-4"
         >
           <input
             name={name}
-            role="combobox"
-            id="search-input"
             autocomplete="off"
             ref={searchInputRef}
             defaultValue={query}
             placeholder={placeholder}
-            aria-controls="search-suggestion"
             onFocus={() => setIsFocused(true)}
             onInput={(e) => setSearch(e.currentTarget.value)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}

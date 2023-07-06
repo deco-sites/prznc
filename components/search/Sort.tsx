@@ -37,7 +37,6 @@ function Sort({ sortOptions }: Props) {
     <>
       <div class="flex lg:hidden flex-1 justify-center items-center h-[40px] px-4">
         <select
-          id="sort"
           name="sort"
           onInput={applySort}
           class="w-full px-1 text-sm text-base-content cursor-pointer outline-none bg-transparent"
@@ -56,7 +55,6 @@ function Sort({ sortOptions }: Props) {
       <div class="text-sm hidden lg:block">
         Ordenar por
         <select
-          id="sort"
           name="sort"
           onInput={applySort}
           class="w-min h-[36px] px-1 rounded text-sm m-2 text-base-content cursor-pointer outline-none bg-gray-300"

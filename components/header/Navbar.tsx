@@ -24,21 +24,29 @@ function Navbar({ items, highlightedItems, searchbar }: {
           <Buttons variant="menu" />
         </div>
 
-        <a href="/" class="flex-grow inline-flex items-center">
+        <a
+          href="/"
+          aria-label="Prezunic"
+          class="flex-grow inline-flex items-center"
+        >
           <img
             width={42}
             height={42}
             alt="Prezunic"
-            src={asset("/logo.png")}
+            src={asset("/logo.webp")}
           />
         </a>
 
         <div class="flex -mr-2">
-          <a href="#" class="btn btn-sm btn-ghost">
+          <a href="#" aria-label="Meus pedidos" class="btn btn-sm btn-ghost">
             <Icon id="Bag" size={20} />
           </a>
 
-          <a href="/login" class="btn btn-sm btn-ghost">
+          <a
+            href="/login"
+            aria-label="Minha conta"
+            class="btn btn-sm btn-ghost"
+          >
             <Icon id="User" size={20} />
           </a>
 
@@ -59,7 +67,7 @@ function Navbar({ items, highlightedItems, searchbar }: {
               width={62}
               height={62}
               alt="Prezunic"
-              src={asset("/logo.png")}
+              src={asset("/logo.webp")}
             />
           </a>
         </div>

@@ -20,7 +20,7 @@ function Alert({ links = [], zipcodeHelper = "Your zipcode" }: Props) {
       class="flex py-2 px-2 lg:py-3 lg:px-0 text-[13px]"
     >
       <div class="flex flex-row gap-2 cursor-pointer font-bold lg:font-normal w-full lg:w-auto">
-        <img src={asset("/pin-map.png")} alt="map" />
+        <img src={asset("/pin-map.png")} alt="map" width={16} height={20} />
         {zipcodeHelper}
       </div>
 
