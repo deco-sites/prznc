@@ -6,6 +6,7 @@ import type { Image as LiveImage } from "deco-sites/std/components/types.ts";
  * @titleBy alt
  */
 export interface Banner {
+  preload?: boolean;
   srcMobile: LiveImage;
   srcDesktop?: LiveImage;
   /**
@@ -135,11 +136,11 @@ export default function BannnerGrid({
 
               <img
                 class="w-full"
-                loading="lazy"
                 decoding="async"
                 alt={banner.alt}
                 src={banner.srcMobile}
                 sizes="(max-width: 640px) 100vw, 30vw"
+                loading={banner.preload ? "eager" : "lazy"}
               />
             </Picture>
           </a>

@@ -9378,6 +9378,13 @@
     "ZGVjby1zaXRlcy9wcnpuYy9jb21wb25lbnRzL3VpL0Jhbm5lckdyaWQudHN4@Banner": {
       "type": "object",
       "properties": {
+        "preload": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "title": "Preload"
+        },
         "srcMobile": {
           "$ref": "#/definitions/ZGVjby1zaXRlcy9zdGQvY29tcG9uZW50cy90eXBlcy50cw==@Image",
           "title": "Src Mobile"
