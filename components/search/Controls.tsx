@@ -17,37 +17,54 @@ function SearchControls(
   { filters, breadcrumb, displayFilter, sortOptions }: Props,
 ) {
   const open = useSignal(false);
+  const url = window?.location?.href ? new URL(window?.location?.href) : null;
+  const isSearching = url?.searchParams?.has("q");
+  const searchTerm = url?.searchParams?.get("q");
 
   return (
-    <div class="flex flex-col justify-between mb-4 p-4 sm:mb-0 sm:p-0 sm:gap-4 sm:flex-row sm:h-[53px] sm:border-b sm:border-base-200">
-      <div class="flex flex-row items-center sm:p-0 mb-2">
-        <Breadcrumb itemListElement={breadcrumb?.itemListElement} />
+    <div>
+      <div class="flex flex-row items-center p-4 pb-0 lg:p-0">
+        <Breadcrumb
+          searchTerm={searchTerm}
+          itemListElement={breadcrumb?.itemListElement}
+        />
       </div>
 
-      <div class="flex flex-row items-center justify-between border-b border-base-200 sm:gap-4 sm:border-none">
-        <Button
-          class={displayFilter ? "btn-ghost" : "btn-ghost sm:hidden"}
-          onClick={() => {
-            open.value = true;
+      <div class="flex flex-col lg:ml-[282px] lg:items-center justify-between mb-4 p-4 lg:mb-0 lg:p-0 lg:gap-4 lg:flex-row lg:h-[53px]">
+        {isSearching && (
+          <span class="mr-auto mb-4 lg:mb-0 text-sm font-bold">
+            Você buscou por: {searchTerm}
+          </span>
+        )}
+
+        <div class="flex flex-row items-center justify-between bg-white lg:border-none h-[40px] divide-x border-[1px] border-gray-200 shadow-md rounded-md lg:shadow-none lg:border-0 lg:bg-transparent lg:divide-x-0 lg:ml-auto">
+          <Button
+            class={`${
+              displayFilter ? "btn-ghost" : "btn-ghost lg:hidden"
+            } flex flex-1`}
+            onClick={() => {
+              open.value = true;
+            }}
+          >
+            Filtrar
+            <Icon id="FilterList" width={16} height={16} />
+          </Button>
+          {sortOptions.length > 0 && <Sort sortOptions={sortOptions} />}
+        </div>
+
+        <Modal
+          loading="lazy"
+          title="Filtrar"
+          style="primary"
+          mode="sidebar-right"
+          open={open.value}
+          onClose={() => {
+            open.value = false;
           }}
         >
-          Filtrar
-          <Icon id="FilterList" width={16} height={16} />
-        </Button>
-        {sortOptions.length > 0 && <Sort sortOptions={sortOptions} />}
+          <Filters filters={filters} />
+        </Modal>
       </div>
-
-      <Modal
-        loading="lazy"
-        title="Filtrar"
-        mode="sidebar-right"
-        open={open.value}
-        onClose={() => {
-          open.value = false;
-        }}
-      >
-        <Filters filters={filters} />
-      </Modal>
     </div>
   );
 }
