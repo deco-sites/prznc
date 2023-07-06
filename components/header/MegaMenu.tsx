@@ -39,6 +39,7 @@ function Menu(props: { items: NavItem[] }) {
                 <div class="text-sm font-bold group-hover/base:bg-primary group-hover/base:text-white">
                   <a href={item.href} class="px-4 py-2 flex items-center">
                     <img
+                      loading="lazy"
                       src={item.image}
                       alt={item.label}
                       class="h-[24px] w-[24px] object-contain mr-2"
@@ -56,6 +57,7 @@ function Menu(props: { items: NavItem[] }) {
                       class="px-4 py-2 flex text-primary text-lg"
                     >
                       <img
+                        loading="lazy"
                         src={item.image}
                         alt={item.label}
                         class="h-[24px] w-[24px] object-contain mr-2"

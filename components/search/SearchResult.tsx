@@ -2,9 +2,6 @@ import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import Filters from "$store/components/search/Filters.tsx";
 import Icon from "$store/components/ui/Icon.tsx";
 import SearchControls from "$store/islands/SearchControls.tsx";
-import { SendEventOnLoad } from "$store/sdk/analytics.tsx";
-import { mapProductToAnalyticsItem } from "deco-sites/std/commerce/utils/productToAnalyticsItem.ts";
-import { useOffer } from "$store/sdk/useOffer.ts";
 import ProductGallery, { Columns } from "../product/ProductGallery.tsx";
 import { Layout as cardLayout } from "$store/components/product/ProductCard.tsx";
 import type { LoaderReturnType } from "$live/types.ts";
@@ -51,62 +48,40 @@ function Result({
         displayFilter={layout?.variant === "drawer"}
       />
 
-      <div class="flex flex-row gap-8">
+      <div class="flex flex-row gap-8 py-4 px-4 lg:px-0">
         <aside class="hidden lg:block w-min min-w-[250px]">
           <Filters filters={filters} />
         </aside>
 
-        <div class="flex-grow px-4 lg:px-0 lg:py-4">
-          <ProductGallery products={products} layout={cardLayout} />
-        </div>
+        <ProductGallery products={products} layout={cardLayout} />
       </div>
 
       <div class="flex justify-center my-4">
-        <div class="join">
-          <a
-            aria-label="previous page link"
-            rel="prev"
-            href={pageInfo.previousPage ?? "#"}
-            class="btn btn-ghost join-item"
-          >
-            <Icon id="ChevronLeft" width={20} height={20} strokeWidth={2} />
-          </a>
-          <span class="btn btn-ghost join-item">
-            Página {pageInfo.currentPage + 1}
-          </span>
-          <a
-            aria-label="next page link"
-            rel="next"
-            href={pageInfo.nextPage ?? "#"}
-            class="btn btn-ghost join-item"
-          >
-            <Icon
-              id="ChevronRight"
-              width={20}
-              height={20}
-              strokeWidth={2}
-            />
-          </a>
-        </div>
+        <a
+          aria-label="previous page link"
+          rel="prev"
+          href={pageInfo.previousPage ?? "#"}
+          class="btn btn-ghost join-item"
+        >
+          <Icon id="ChevronLeft" width={20} height={20} strokeWidth={2} />
+        </a>
+        <span class="btn btn-ghost join-item">
+          Página {pageInfo.currentPage + 1}
+        </span>
+        <a
+          aria-label="next page link"
+          rel="next"
+          href={pageInfo.nextPage ?? "#"}
+          class="btn btn-ghost join-item"
+        >
+          <Icon
+            id="ChevronRight"
+            width={20}
+            height={20}
+            strokeWidth={2}
+          />
+        </a>
       </div>
-
-      <SendEventOnLoad
-        event={{
-          name: "view_item_list",
-          params: {
-            // TODO: get category name from search or cms setting
-            item_list_name: "",
-            item_list_id: "",
-            items: page.products?.map((product) =>
-              mapProductToAnalyticsItem({
-                ...(useOffer(product.offers)),
-                product,
-                breadcrumbList: page.breadcrumb,
-              })
-            ),
-          },
-        }}
-      />
     </LimitedDiv>
   );
 }
