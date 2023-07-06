@@ -1,14 +1,12 @@
 import { asset } from "$fresh/runtime.ts";
 import { navbarHeight } from "./constants.ts";
-import { lazy, Suspense } from "preact/compat";
 import Icon from "$store/components/ui/Icon.tsx";
 import type { NavItem, NavLink } from "./Header.tsx";
 import Buttons from "$store/islands/HeaderButton.tsx";
 import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import Searchbar from "$store/islands/HeaderSearchbar.tsx";
+import MegaMenu from "$store/components/header/MegaMenu.tsx";
 import type { Props as SearchbarProps } from "$store/components/search/Searchbar.tsx";
-
-const MegaMenu = lazy(() => import("$store/components/header/MegaMenu.tsx"));
 
 function Navbar({ items, highlightedItems, searchbar }: {
   items: NavItem[];
@@ -68,9 +66,7 @@ function Navbar({ items, highlightedItems, searchbar }: {
           </div>
 
           <div class="hidden group-hover:block absolute top-full bg-white shadow-lg w-[1280px] h-[524px] left-0 ml-[14px]">
-            <Suspense fallback={null}>
-              <MegaMenu items={items} />
-            </Suspense>
+            <MegaMenu items={items} />
           </div>
         </div>
 
