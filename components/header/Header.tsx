@@ -6,7 +6,6 @@ import type { EditableProps as SearchbarProps } from "$store/components/search/S
 
 import Navbar from "./Navbar.tsx";
 import Alert, { Props as AlertProps } from "./Alert.tsx";
-import { headerHeight, headerHeightMobile } from "./constants.ts";
 
 export interface NavLink {
   label: string;
@@ -66,7 +65,7 @@ function Header({
   const searchbar = { ..._searchbar, products, suggestions };
 
   return (
-    <header class={`h-[${headerHeightMobile}] lg:h-[${headerHeight}]`}>
+    <header class={`h-[137px] lg:h-[157px]`}>
       <div class="bg-base-100 fixed w-full z-50 flex flex-col-reverse lg:flex-col">
         <Alert {...alert} />
 
