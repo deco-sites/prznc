@@ -1,3 +1,4 @@
+import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import { Picture, Source } from "deco-sites/std/components/Picture.tsx";
 import type { Image as LiveImage } from "deco-sites/std/components/types.ts";
 
@@ -15,6 +16,10 @@ export interface Banner {
    * @description When you click you go to
    */
   href: string;
+  mobileWidth: number;
+  mobileHeight: number;
+  desktopWidth: number;
+  desktopHeight: number;
 }
 
 export type BorderRadius =
@@ -28,7 +33,8 @@ export type BorderRadius =
   | "full";
 
 export interface Props {
-  title?: string;
+  hideOnMobile?: boolean;
+  hideOnDesktop?: boolean;
   /**
    * @description Default is 2 for mobile and all for desktop
    */
@@ -36,7 +42,7 @@ export interface Props {
     /** @default 2 */
     mobile?: 1 | 2;
     /** @default 4 */
-    desktop?: 1 | 2 | 4 | 6 | 8;
+    desktop?: 1 | 2 | 3 | 4 | 5 | 6 | 8;
   };
   /**
    * @description Item's border radius in px
@@ -58,7 +64,9 @@ const MOBILE_COLUMNS = {
 const DESKTOP_COLUMNS = {
   1: "sm:grid-cols-1",
   2: "sm:grid-cols-2",
+  3: "sm:grid-cols-3",
   4: "sm:grid-cols-4",
+  5: "sm:grid-cols-5",
   6: "sm:grid-cols-6",
   8: "sm:grid-cols-8",
 };
@@ -86,31 +94,27 @@ const RADIUS_DESKTOP = {
 };
 
 export default function BannnerGrid({
-  title,
+  hideOnDesktop = false,
+  hideOnMobile = false,
   itemsPerLine,
   borderRadius,
   banners = [],
 }: Props) {
-  return (
-    <section class="container w-full px-4 md:px-0 mx-auto">
-      {title &&
-        (
-          <div class="py-6 md:py-0 md:pb-[40px] flex items-center mt-6">
-            <h2 class="text-lg leading-5 font-semibold uppercase">
-              {title}
-            </h2>
+  const hideOnDesktopClass = hideOnDesktop ? "lg:hidden" : "lg:flex";
+  const hideOnMobileClass = hideOnMobile ? "hidden" : "flex";
+  const hideClasses = `${hideOnDesktopClass} ${hideOnMobileClass}`;
+  const classes = "container w-full py-4 px-4 lg:px-0 mx-auto";
 
-            <div class="bg-[#e5e5ea] h-[1px] w-full ml-4"></div>
-          </div>
-        )}
+  return (
+    <LimitedDiv baseClass={hideClasses} class={classes}>
       <div
-        class={`grid gap-4 md:gap-6 ${
+        class={`grid gap-4 lg:gap-6 ${
           MOBILE_COLUMNS[itemsPerLine?.mobile ?? 2]
         } ${DESKTOP_COLUMNS[itemsPerLine?.desktop ?? 4]}`}
       >
-        {banners.map(({ href, srcMobile, srcDesktop, alt }) => (
+        {banners.map((banner) => (
           <a
-            href={href}
+            href={banner.href}
             class={`overflow-hidden ${
               RADIUS_MOBILE[borderRadius.mobile ?? "none"]
             } ${RADIUS_DESKTOP[borderRadius.desktop ?? "none"]} `}
@@ -118,28 +122,29 @@ export default function BannnerGrid({
             <Picture>
               <Source
                 media="(max-width: 767px)"
-                src={srcMobile}
-                width={100}
-                height={100}
+                src={banner.srcMobile}
+                width={banner.mobileWidth}
+                height={banner.mobileHeight}
               />
               <Source
                 media="(min-width: 768px)"
-                src={srcDesktop ? srcDesktop : srcMobile}
-                width={250}
-                height={250}
+                src={banner.srcDesktop ? banner.srcDesktop : banner.srcMobile}
+                width={banner.desktopWidth}
+                height={banner.desktopHeight}
               />
+
               <img
                 class="w-full"
-                sizes="(max-width: 640px) 100vw, 30vw"
-                src={srcMobile}
-                alt={alt}
-                decoding="async"
                 loading="lazy"
+                decoding="async"
+                alt={banner.alt}
+                src={banner.srcMobile}
+                sizes="(max-width: 640px) 100vw, 30vw"
               />
             </Picture>
           </a>
         ))}
       </div>
-    </section>
+    </LimitedDiv>
   );
 }

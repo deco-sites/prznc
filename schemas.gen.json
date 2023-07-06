@@ -9396,12 +9396,32 @@
           "type": "string",
           "description": "When you click you go to",
           "title": "Href"
+        },
+        "mobileWidth": {
+          "type": "number",
+          "title": "Mobile Width"
+        },
+        "mobileHeight": {
+          "type": "number",
+          "title": "Mobile Height"
+        },
+        "desktopWidth": {
+          "type": "number",
+          "title": "Desktop Width"
+        },
+        "desktopHeight": {
+          "type": "number",
+          "title": "Desktop Height"
         }
       },
       "required": [
         "srcMobile",
         "alt",
-        "href"
+        "href",
+        "mobileWidth",
+        "mobileHeight",
+        "desktopWidth",
+        "desktopHeight"
       ],
       "title": "Banner",
       "titleBy": "alt"
@@ -9416,12 +9436,19 @@
     "ZGVjby1zaXRlcy9wcnpuYy9jb21wb25lbnRzL3VpL0Jhbm5lckdyaWQudHN4@Props": {
       "type": "object",
       "properties": {
-        "title": {
+        "hideOnMobile": {
           "type": [
-            "string",
+            "boolean",
             "null"
           ],
-          "title": "Title"
+          "title": "Hide On Mobile"
+        },
+        "hideOnDesktop": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "title": "Hide On Desktop"
         },
         "itemsPerLine": {
           "type": "object",
@@ -9456,8 +9483,18 @@
                 },
                 {
                   "type": "number",
+                  "const": 3,
+                  "default": 3
+                },
+                {
+                  "type": "number",
                   "const": 4,
                   "default": 4
+                },
+                {
+                  "type": "number",
+                  "const": 5,
+                  "default": 5
                 },
                 {
                   "type": "number",
