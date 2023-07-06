@@ -180,7 +180,9 @@ function Footer({
     },
   },
 }: Props) {
-  const _logo = layout?.hide?.logo ? <></> : <Logo logo={logo} />;
+  const _logo = layout?.hide?.logo
+    ? <></>
+    : <Logo social={social} logo={logo} />;
   const _newsletter = layout?.hide?.newsletter ? <></> : (
     <Newsletter
       content={newsletter}
