@@ -103,7 +103,7 @@ export default function BannnerGrid({
   const hideOnDesktopClass = hideOnDesktop ? "lg:hidden" : "lg:flex";
   const hideOnMobileClass = hideOnMobile ? "hidden" : "flex";
   const hideClasses = `${hideOnDesktopClass} ${hideOnMobileClass}`;
-  const classes = "container w-full py-4 px-4 lg:px-0 mx-auto";
+  const classes = "container w-full py-12 px-4 lg:px-0 mx-auto";
 
   return (
     <LimitedDiv baseClass={hideClasses} class={classes}>
