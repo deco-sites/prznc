@@ -5,8 +5,8 @@ import type { Product, Suggestion } from "deco-sites/std/commerce/types.ts";
 import type { EditableProps as SearchbarProps } from "$store/components/search/Searchbar.tsx";
 
 import Navbar from "./Navbar.tsx";
-import { headerHeight } from "./constants.ts";
 import Alert, { Props as AlertProps } from "./Alert.tsx";
+import { headerHeight, headerHeightMobile } from "./constants.ts";
 
 export interface NavLink {
   label: string;
@@ -66,7 +66,7 @@ function Header({
   const searchbar = { ..._searchbar, products, suggestions };
 
   return (
-    <header style={{ height: headerHeight }}>
+    <header class={`h-[${headerHeightMobile}] lg:h-[${headerHeight}]`}>
       <div class="bg-base-100 fixed w-full z-50 flex flex-col-reverse lg:flex-col">
         <Alert {...alert} />
 
