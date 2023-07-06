@@ -1,11 +1,7 @@
 import Image from "deco-sites/std/components/Image.tsx";
-import Avatar from "$store/components/ui/Avatar.tsx";
-import WishlistIcon from "$store/islands/WishlistButton.tsx";
 import { useOffer } from "$store/sdk/useOffer.ts";
 import { formatPrice } from "$store/sdk/format.ts";
 import { useVariantPossibilities } from "$store/sdk/useVariantPossiblities.ts";
-import { mapProductToAnalyticsItem } from "deco-sites/std/commerce/utils/productToAnalyticsItem.ts";
-import { SendEventOnClick } from "$store/sdk/analytics.tsx";
 import type { Product } from "deco-sites/std/commerce/types.ts";
 
 export interface Layout {
@@ -61,7 +57,6 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
     name,
     image: images,
     offers,
-    isVariantOf,
   } = product;
 
   const id = `product-card-${productID}`;
@@ -77,17 +72,6 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
     !l?.basics?.contentAlignment || l?.basics?.contentAlignment == "Left"
       ? "left"
       : "center";
-
-  const skuSelector = variants.map(([value, [link]]) => (
-    <li>
-      <a href={link}>
-        <Avatar
-          variant={link === url ? "active" : "default"}
-          content={value}
-        />
-      </a>
-    </li>
-  ));
 
   const cta = (
     <a
@@ -105,22 +89,6 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
       data-deco="view-product"
       class="card card-compact group w-full bg-white rounded-2xl pb-3 shadow-lg"
     >
-      <SendEventOnClick
-        id={id}
-        event={{
-          name: "select_item" as const,
-          params: {
-            item_list_name: itemListName,
-            items: [
-              mapProductToAnalyticsItem({
-                product,
-                price,
-                listPrice,
-              }),
-            ],
-          },
-        }}
-      />
       <figure class="relative overflow-hidden w-full min-h-[118px] flex justify-center items-center py-4">
         {discountPercentage != 0 && (
           <span class="absolute top-0 left-0 mt-4 ml-4 text-xs rounded-full border-solid border-[1px] p-1 px-2 border-red-500 bg-white text-red-500 font-bold">
@@ -148,22 +116,6 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
       </figure>
       {/* Prices & Name */}
       <div class="flex-auto flex flex-col p-2">
-        {/* SKU Selector */}
-        {(!l?.elementsPositions?.skuSelector ||
-          l?.elementsPositions?.skuSelector === "Top") && (
-          <>
-            {l?.hide?.skuSelector ? "" : (
-              <ul
-                class={`flex items-center gap-2 w-full ${
-                  align === "center" ? "justify-center" : "justify-start"
-                } ${l?.onMouseOver?.showSkuSelector ? "lg:hidden" : ""}`}
-              >
-                {skuSelector}
-              </ul>
-            )}
-          </>
-        )}
-
         {l?.hide?.productName && l?.hide?.productDescription
           ? ""
           : (
@@ -199,29 +151,7 @@ function ProductCard({ product, preload, itemListName, layout }: Props) {
                 {formatPrice(price, offers!.priceCurrency!)} un
               </div>
             </div>
-            {l?.hide?.installments
-              ? ""
-              : (
-                <div class="text-base-300 text-sm lg:text-base">
-                  ou {installments}
-                </div>
-              )}
           </div>
-        )}
-
-        {/* SKU Selector */}
-        {l?.elementsPositions?.skuSelector === "Bottom" && (
-          <>
-            {l?.hide?.skuSelector ? "" : (
-              <ul
-                class={`flex items-center gap-2 w-full ${
-                  align === "center" ? "justify-center" : "justify-start"
-                } ${l?.onMouseOver?.showSkuSelector ? "lg:hidden" : ""}`}
-              >
-                {skuSelector}
-              </ul>
-            )}
-          </>
         )}
 
         {!l?.hide?.cta

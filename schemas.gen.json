@@ -69,7 +69,6 @@
               "./islands/HeaderButton.tsx",
               "./islands/HeaderModals.tsx",
               "./islands/HeaderSearchbar.tsx",
-              "./islands/MegaMenu.tsx",
               "./islands/Newsletter.tsx",
               "./islands/OutOfStock.tsx",
               "./islands/ProductImageZoom.tsx",
@@ -13928,22 +13927,6 @@
         }
       }
     },
-    "Li9pc2xhbmRzL01lZ2FNZW51LnRzeA==": {
-      "title": "./islands/MegaMenu.tsx",
-      "type": "object",
-      "required": [
-        "__resolveType"
-      ],
-      "properties": {
-        "__resolveType": {
-          "type": "string",
-          "enum": [
-            "./islands/MegaMenu.tsx"
-          ],
-          "default": "./islands/MegaMenu.tsx"
-        }
-      }
-    },
     "Li9pc2xhbmRzL05ld3NsZXR0ZXIudHN4": {
       "title": "./islands/Newsletter.tsx",
       "type": "object",
@@ -15986,9 +15969,6 @@
         },
         {
           "$ref": "#/definitions/Li9pc2xhbmRzL0hlYWRlclNlYXJjaGJhci50c3g="
-        },
-        {
-          "$ref": "#/definitions/Li9pc2xhbmRzL01lZ2FNZW51LnRzeA=="
         },
         {
           "$ref": "#/definitions/Li9pc2xhbmRzL05ld3NsZXR0ZXIudHN4"

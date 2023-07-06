@@ -1,12 +1,14 @@
 import { asset } from "$fresh/runtime.ts";
 import { navbarHeight } from "./constants.ts";
+import { lazy, Suspense } from "preact/compat";
 import Icon from "$store/components/ui/Icon.tsx";
-import MegaMenu from "$store/islands/MegaMenu.tsx";
 import type { NavItem, NavLink } from "./Header.tsx";
 import Buttons from "$store/islands/HeaderButton.tsx";
 import LimitedDiv from "$store/components/LimitedDiv.tsx";
 import Searchbar from "$store/islands/HeaderSearchbar.tsx";
 import type { Props as SearchbarProps } from "$store/components/search/Searchbar.tsx";
+
+const MegaMenu = lazy(() => import("$store/components/header/MegaMenu.tsx"));
 
 function Navbar({ items, highlightedItems, searchbar }: {
   items: NavItem[];
@@ -59,7 +61,18 @@ function Navbar({ items, highlightedItems, searchbar }: {
         baseClass="hidden lg:flex bg-secondary"
         class="flex flex-row h-[72px] items-center"
       >
-        <MegaMenu items={items} />
+        <div class="group relative select-none h-full -ml-8">
+          <div class="flex flex-col justify-center items-center cursor-pointer h-full">
+            <Icon id="Bars3" width={20} height={20} strokeWidth={0.01} />
+            <span class="text-xs font-bold ">Categorias</span>
+          </div>
+
+          <div class="hidden group-hover:block absolute top-full bg-white shadow-lg w-[1280px] h-[524px] left-0 ml-[14px]">
+            <Suspense fallback={null}>
+              <MegaMenu items={items} />
+            </Suspense>
+          </div>
+        </div>
 
         <div class="block mx-16 w-[62px] h-[62px]">
           <a href="/">

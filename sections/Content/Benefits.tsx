@@ -45,13 +45,7 @@ export default function Benefits(
       : "piledup";
 
     return (
-      <div
-        class={`${
-          reverse ? "bg-primary text-primary-content p-4 lg:px-8 lg:py-4" : ""
-        } flex gap-4 ${
-          benefitLayout == "piledup" ? "flex-col items-center text-center" : ""
-        }`}
-      >
+      <div class="flex gap-4 justify-center items-center">
         <div class="flex-none">
           <Icon
             id={benefit.icon}
@@ -83,16 +77,19 @@ export default function Benefits(
   });
 
   return (
-    <LimitedDiv baseClass="my-4" class="px-4 rounded-lg shadow-lg">
+    <LimitedDiv
+      baseClass="my-4"
+      class="px-4 rounded-lg shadow-lg border-[1px] border-gray-200"
+    >
       {!layout?.variation || layout?.variation === "Simple"
         ? (
-          <div class="w-full container px-4 py-8 flex flex-col gap-8 lg:gap-10 lg:py-10 lg:px-0">
+          <div class="w-full container px-4 py-4 flex flex-col gap-8 lg:gap-10 lg:px-0">
             <Header
               title={title}
               description={description}
               alignment={layout?.headerAlignment || "center"}
             />
-            <div class="w-full flex justify-center">
+            <div class="w-full flex justify-center items-center">
               <div class="flex flex-col gap-4 lg:gap-8 w-full lg:grid grid-flow-col auto-cols-fr">
                 {listOfBenefits}
               </div>

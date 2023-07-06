@@ -11,7 +11,6 @@
 
 import Icon from "$store/components/ui/Icon.tsx";
 import Button from "$store/components/ui/Button.tsx";
-import { sendEvent } from "$store/sdk/analytics.tsx";
 import Spinner from "$store/components/ui/Spinner.tsx";
 import { useEffect, useRef, useState } from "preact/compat";
 import { useAutocomplete } from "deco-sites/std/packs/vtex/hooks/useAutocomplete.ts";
