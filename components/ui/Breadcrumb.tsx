@@ -24,7 +24,7 @@ function Breadcrumb({ itemListElement = [], searchTerm }: Props) {
               index === lastIndex ? "text-primary font-semibold" : "text-base"
             }`}
           >
-            <a href={item} class="py-1 px-3 rounded-full bg-gray-200">
+            <a href={item} class="py-1 px-2 rounded-full bg-gray-200">
               {name}
             </a>
           </li>

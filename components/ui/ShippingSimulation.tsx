@@ -12,7 +12,7 @@ function ShippingSimulation() {
 
   return (
     <form
-      class="flex flex-1 max-w-[250px] border-2 border-gray-400 rounded-md overflow-hidden"
+      class="flex flex-1 lg:max-w-[250px] border-2 border-gray-400 rounded-md overflow-hidden"
       onSubmit={(e) => e.preventDefault()}
     >
       <input

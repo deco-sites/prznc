@@ -10,6 +10,7 @@ import { useOffer } from "$store/sdk/useOffer.ts";
 import { formatPrice } from "$store/sdk/format.ts";
 import type { ProductDetailsPage } from "deco-sites/std/commerce/types.ts";
 import type { LoaderReturnType } from "$live/types.ts";
+import ProductDetailsTabs from "$store/islands/ProductDetailsTabs.tsx";
 
 export type Variant = "front-back" | "slider" | "auto";
 
@@ -117,7 +118,7 @@ function Details({ page }: { page: ProductDetailsPage; variant: Variant }) {
    * reached causing a scrollbar to be rendered.
    */
   return (
-    <LimitedDiv class="flex flex-col gap-4">
+    <LimitedDiv class="flex flex-col gap-4 p-4 lg:p-0">
       {/* Breadcrumb */}
       <Breadcrumb
         itemListElement={page?.breadcrumbList?.itemListElement.slice(0, -1)}
@@ -134,16 +135,14 @@ function Details({ page }: { page: ProductDetailsPage; variant: Variant }) {
           class="object-contain bg-white rounded-sm"
           // Preload LCP image for better web vitals
           preload={true}
-          loading={"lazy"}
+          loading="eager"
         />
 
         {/* Product Info */}
-        <div class="px-4 sm:pr-0 sm:pl-6 flex flex-1 flex-col">
+        <div class="flex flex-1 flex-col">
           {/* Code and name */}
-          <div>
-            <span class="text-xs font-bold">{gtin}</span>
-            <h1 class="font-medium text-2xl">{name}</h1>
-          </div>
+          <span class="text-xs font-bold">{gtin}</span>
+          <h1 class="font-medium text-2xl">{name}</h1>
 
           <div class="my-6 flex gap-2 text-sm text-primary cursor-pointer items-center">
             <Icon id="Discount" size={24} class="text-gray-800" />
@@ -151,15 +150,13 @@ function Details({ page }: { page: ProductDetailsPage; variant: Variant }) {
           </div>
 
           {/* Prices */}
-          <div>
-            <div class="flex flex-col gap-2">
-              <span class="line-through text-base-300 text-sm">
-                {formatPrice(listPrice, offers!.priceCurrency!)}
-              </span>
-              <span class="font-bold text-2xl">
-                {formatPrice(price, offers!.priceCurrency!)}
-              </span>
-            </div>
+          <div class="flex flex-col gap-2">
+            <span class="line-through text-base-300 text-sm">
+              {formatPrice(listPrice, offers!.priceCurrency!)}
+            </span>
+            <span class="font-bold text-2xl">
+              {formatPrice(price, offers!.priceCurrency!)}
+            </span>
           </div>
 
           {/* Add to Cart and Favorites button */}
@@ -179,7 +176,7 @@ function Details({ page }: { page: ProductDetailsPage; variant: Variant }) {
           </div>
 
           {/* Shipping Simulation */}
-          <div class="mt-8 flex justify-between border-y-2 border-gray-200 py-8">
+          <div class="mt-8 flex flex-col lg:flex-row justify-between border-y-2 border-gray-200 py-8 gap-4">
             <div class="flex gap-2 text-sm justify-center items-center mr-auto">
               <Icon id="Truck" size={32} class="text-primary" />
               Valor e prazo de entrega
@@ -189,6 +186,8 @@ function Details({ page }: { page: ProductDetailsPage; variant: Variant }) {
           </div>
         </div>
       </div>
+
+      <ProductDetailsTabs />
     </LimitedDiv>
   );
 }
